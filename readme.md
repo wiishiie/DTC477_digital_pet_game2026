@@ -21,7 +21,7 @@ A pet game where you take care of a pet of your choice. The goal is to level you
 
 - **Isabelle**: Create visuals, pets, assets, hunger bar, experience bar  
 - **Crystal**: HTML, CSS  
-- **Riley**: *(Not assigned yet)*  
+- **Riley**: HTML, CSS
 
 ---
 
