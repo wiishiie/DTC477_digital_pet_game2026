@@ -1,5 +1,11 @@
 # 🐾 Pet Game Concept
 
+## Game Name
+- Pixel Pet Evo
+
+---
+
+
 ## Game Concept
 A pet game where you take care of a pet of your choice. The goal is to level your pet up as much as possible without letting it die.
 
@@ -14,6 +20,8 @@ A pet game where you take care of a pet of your choice. The goal is to level you
   - Hunger is still consumed
 - Currency is used to buy food to refill hunger
 - When your pet levels up, it can **evolve**
+- menu/ background stays the same, hitting buttons on the side outisde of the window change the window in which the pet stays in, switching between games, the home, inventory, and shop
+
 
 ---
 
@@ -21,7 +29,7 @@ A pet game where you take care of a pet of your choice. The goal is to level you
 
 - **Isabelle**: Create visuals, pets, assets, hunger bar, experience bar  
 - **Crystal**: HTML, CSS  
-- **Riley**: HTML, CSS
+- **Riley**: HTML, CSS 
 
 ---
 
@@ -141,5 +149,12 @@ A pet game where you take care of a pet of your choice. The goal is to level you
 ## 📚 Documentation Requirements
 
 - Every JavaScript section must include a comment explaining it
+
+## Mini Games
+- red light green light
+- dodging objects: blocks or something fall from the ceiling and you have to move back n forth  dodging them for 30 seconds
+- enemy avoidance game: you spawn in the middle of the "room" and other enemys try and get you by following you around the room
+
+
 
 **Format:**
