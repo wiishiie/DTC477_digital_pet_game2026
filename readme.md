@@ -152,7 +152,6 @@ A pet game where you take care of a pet of your choice. The goal is to level you
 
 ## Mini Games
 - red light green light
-- dodging objects: blocks or something fall from the ceiling and you have to move back n forth  dodging them for 30 seconds
 - enemy avoidance game: you spawn in the middle of the "room" and other enemys try and get you by following you around the room
 
 
