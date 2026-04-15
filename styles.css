@@ -1,0 +1,41 @@
+body{
+    font-family: "Jersey 10", sans-serif;
+}
+
+h1{
+    font-size: 60px;
+    padding: 3vw;
+    width: 400px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: auto;
+    right: 0;
+    left: 0;
+}
+
+canvas {
+    border: 2px solid black;
+    display: block;
+    margin: 0 auto;
+}
+button {
+    height: 5vw;
+    width: 5vw;
+}
+
+#mainBtns {
+    display: flex;
+    flex-direction: row;
+    gap: 5vw;
+    justify-content: center;
+    align-items: center;
+    padding-top: 2vw;
+}
+
+#currency{
+    font-size: 45px;
+    position: absolute;
+    right: 190px;
+}
