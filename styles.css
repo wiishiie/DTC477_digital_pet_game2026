@@ -36,6 +36,7 @@ button {
 
 #currency{
     font-size: 45px;
-    position: absolute;
-    right: 190px;
+    position: fixed;
+    top: 20px;
+    right: 20px;
 }
