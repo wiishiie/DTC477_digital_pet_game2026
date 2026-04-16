@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -11,27 +12,42 @@
     <link rel="stylesheet" href="reset.css">
     <link rel="stylesheet" href="styles.css">
 
-    <title>Digital Pet</title>
+    <title>Evo Pixel Pet</title>
 </head>
 
 
 <body>
-<h1>Evo Pixel Pet</h1>
-<p id="currency">0</p>
+    <h1>Evo Pixel Pet</h1>
+    <p id="currency">0</p>
+    <!-- CANVAS (ALWAYS VISIBLE) -->
     <canvas id="screen" width="1000" height="700"></canvas>
 
+
+    <!-- BUTTONS -->
     <div id="mainBtns">
-        <button id="homeBtn"> home </button>
-        <button id="inventoryBtn"> inventory </button>
-        <button id="shopBtn"> shop </button>
-        <button id="gamebtn"> games </button>
+        <button id="homeBtn">home</button>
+        <button id="inventoryBtn">inventory</button>
+        <button id="shopBtn">shop</button>
+        <button id="gameBtn">games</button>
     </div>
-    
+
+    <!-- POPUPS -->
+<div id="startPopup" class="popup hidden">
+  <div class="popup-box">
+    <p>Reach the top without moving on RED!</p>
+    <button id="startBtn">Play</button>
+  </div>
+</div>
+
+<div id="endPopup" class="popup hidden">
+  <div class="popup-box">
+    <p id="endText"></p>
+    <button onclick="goHome()">Go Home</button>
+  </div>
+</div>
 
 
-
-
-<!--
+    <!--
 //----LOGIC STEPS----//
 
 //---GOAL OF THE GAME--//
@@ -52,7 +68,10 @@
 //2.)
 
 -->
+    <script src="red-light-green-light.js"></script>
+    <script src="canvas.js"></script>
+    <script src="script.js"></script>
 
-<script src="canvas.js"></script>
 </body>
+
 </html>

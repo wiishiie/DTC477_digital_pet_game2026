@@ -1,42 +1,85 @@
-body{
-    font-family: "Jersey 10", sans-serif;
+/* FONT + BODY */
+body {
+  text-align: center;
+  font-family: "Jersey 10", sans-serif;
 }
 
-h1{
-    font-size: 60px;
-    padding: 3vw;
-    width: 400px;
-    height: 40px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin: auto;
-    right: 0;
-    left: 0;
+body {
+  background-image: url("img/pixelback.png");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
 }
 
-canvas {
-    border: 2px solid black;
-    display: block;
-    margin: 0 auto;
-}
-button {
-    height: 5vw;
-    width: 5vw;
+/* TITLE */
+h1 {
+  font-size: 60px;
+  padding: 3vw;
+  width: 400px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: auto;
 }
 
+/* CANVAS */
+#screen {
+  display: block;
+  margin: 20px auto;
+  border: 3px solid black;
+  background: #f5f5f5;
+}
+
+/* BUTTONS */
 #mainBtns {
-    display: flex;
-    flex-direction: row;
-    gap: 5vw;
-    justify-content: center;
-    align-items: center;
-    padding-top: 2vw;
+  display: flex;
+  flex-direction: row;
+  gap: 5vw;
+  justify-content: center;
+  align-items: center;
+  margin-top: 10px;
 }
 
-#currency{
-    font-size: 45px;
-    position: fixed;
-    top: 20px;
-    right: 20px;
+button {
+  padding: 10px 20px;
+  cursor: pointer;
+}
+
+/* CURRENCY */
+#currency {
+  font-size: 45px;
+  position: fixed;
+  top: 20px;
+  right: 20px;
+}
+
+/* POPUPS */
+.popup {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+
+  width: 300px;
+  height: auto;
+
+  background: white;
+  border: 2px solid black;
+  border-radius: 10px;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  z-index: 10; /* stays on top but not fullscreen */
+}
+
+.popup-box {
+  padding: 20px;
+  text-align: center;
+}
+/* HIDDEN CLASS */
+.hidden {
+  display: none;
 }
