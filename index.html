@@ -2,66 +2,66 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Indie+Flower&family=Jersey+10&display=swap" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Indie+Flower&family=Jersey+10&display=swap" rel="stylesheet">
 
-    <link rel="stylesheet" href="reset.css">
-    <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="reset.css">
+  <link rel="stylesheet" href="styles.css">
 
-    <title>Evo Pixel Pet</title>
+  <title>Evo Pixel Pet</title>
 </head>
 
 
 <body>
-    <h1>Evo Pixel Pet</h1>
-    <p id="currency">0</p>
+  <h1>Evo Pixel Pet</h1>
+  <p id="currency">0</p>
 
 
-    <!-- CANVAS (ALWAYS VISIBLE) -->
-      <canvas id="screen" width="1000" height="700"></canvas>
+  <!-- CANVAS (ALWAYS VISIBLE) -->
+  <canvas id="screen" width="1000" height="700"></canvas>
 
 
-      <!-- BUTTONS -->
-      <div id="mainBtns">
-          <button id="homeBtn">
-            <img src="sprite/visuals/house-button.svg">
-          </button>
+  <!-- BUTTONS -->
+  <div id="mainBtns">
+    <button id="homeBtn">
+      <img src="sprite/visuals/house-button.svg">
+    </button>
 
-          <button id="inventoryBtn" >
-            <img src="sprite/visuals/inventory-button.svg">
-          </button>
+    <button id="inventoryBtn">
+      <img src="sprite/visuals/inventory-button.svg">
+    </button>
 
-          <button id="shopBtn" >
-            <img src="sprite/visuals/shop-button.svg">
-          </button>
+    <button id="shopBtn">
+      <img src="sprite/visuals/shop-button.svg">
+    </button>
 
-          <button id="gameBtn" >
-            <img src="sprite/visuals/game-button.svg">
-          </button>
-      </div>
-   
-
-    <!-- POPUPS -->
-<div id="startPopup" class="popup hidden">
-  <div class="popup-box">
-    <p>Reach the top without moving on RED!</p>
-    <button id="startBtn">Play</button>
+    <button id="gameBtn">
+      <img src="sprite/visuals/game-button.svg">
+    </button>
   </div>
-</div>
 
-<div id="endPopup" class="popup hidden">
-  <div class="popup-box">
-    <p id="endText"></p>
-    <button onclick="goHome()">Go Home</button>
+
+  <!-- POPUPS -->
+  <div id="startPopup" class="popup hidden">
+    <div class="popup-box">
+      <p>Reach the top without moving on RED!</p>
+      <button id="startBtn">Play</button>
+    </div>
   </div>
-</div>
+
+  <div id="endPopup" class="popup hidden">
+    <div class="popup-box">
+      <p id="endText"></p>
+      <button onclick="goHome()">Go Home</button>
+    </div>
+  </div>
 
 
-    <!--
+  <!--
 //----LOGIC STEPS----//
 
 //---GOAL OF THE GAME--//
@@ -82,9 +82,11 @@
 //2.)
 
 -->
-    <script src="red-light-green-light.js"></script>
-    <script src="canvas.js"></script>
+  <script src="red-light-green-light.js"></script>
+  <script src="canvas.js"></script>
+  <script src="script.js"></script>
 
+ 
 </body>
 
 </html>
