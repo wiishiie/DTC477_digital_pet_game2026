@@ -19,17 +19,31 @@
 <body>
     <h1>Evo Pixel Pet</h1>
     <p id="currency">0</p>
+
+
     <!-- CANVAS (ALWAYS VISIBLE) -->
-    <canvas id="screen" width="1000" height="700"></canvas>
+      <canvas id="screen" width="1000" height="700"></canvas>
 
 
-    <!-- BUTTONS -->
-    <div id="mainBtns">
-        <button id="homeBtn">home</button>
-        <button id="inventoryBtn">inventory</button>
-        <button id="shopBtn">shop</button>
-        <button id="gameBtn">games</button>
-    </div>
+      <!-- BUTTONS -->
+      <div id="mainBtns">
+          <button id="homeBtn">
+            <img src="sprite/visuals/house-button.svg">
+          </button>
+
+          <button id="inventoryBtn" >
+            <img src="sprite/visuals/inventory-button.svg">
+          </button>
+
+          <button id="shopBtn" >
+            <img src="sprite/visuals/shop-button.svg">
+          </button>
+
+          <button id="gameBtn" >
+            <img src="sprite/visuals/game-button.svg">
+          </button>
+      </div>
+   
 
     <!-- POPUPS -->
 <div id="startPopup" class="popup hidden">
@@ -70,7 +84,6 @@
 -->
     <script src="red-light-green-light.js"></script>
     <script src="canvas.js"></script>
-    <script src="script.js"></script>
 
 </body>
 

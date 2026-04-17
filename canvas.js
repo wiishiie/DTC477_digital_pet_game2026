@@ -1,9 +1,10 @@
 const canvas = document.getElementById('screen');
 const ctx = canvas.getContext('2d');
 
+
 window.mode = "home";
 
-const W = 1000, H = 700, SIZE = 50, SPEED = 4;
+const W = 1000, H = 700, SIZE = 50, SPEED = 1;
 let x = (W - SIZE) / 2;
 let y = (H - SIZE) / 2;
 
@@ -68,11 +69,15 @@ function drawShop() {
   ctx.fillText("SHOP", 430, 350);
 }
 
+
+const gameBg = new Image();
+gameBg.src = "sprite/visuals/game-bg.svg";
+
+
 // GAME
 function drawGame() {
   // background
-  ctx.fillStyle = "#ddd";
-  ctx.fillRect(0, 0, W, H);
+  ctx.drawImage(gameBg, 0, 0, W + 1, H + 1);
 
   // movement
   if (window.mode === "game" && !gameOver) {
@@ -93,5 +98,13 @@ function drawGame() {
     checkWin();
   }
 }
+
+document.getElementById("homeBtn").onclick = () => { window.mode = "home"; };
+document.getElementById("inventoryBtn").onclick = () => { window.mode = "inventory"; };
+document.getElementById("shopBtn").onclick = () => { window.mode = "shop"; };
+document.getElementById("gameBtn").onclick = () => {
+  window.mode = "game";
+  document.getElementById("startPopup").classList.remove("hidden");
+};
 
 draw();

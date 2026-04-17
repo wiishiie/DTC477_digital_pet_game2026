@@ -2,7 +2,7 @@ let gameStarted = false;
 let gameOver = false;
 let light = "green";
 
-let gameTimer = 10;
+let gameTimer = 7;
 let goalLine = 50;
 
 // START BUTTON
