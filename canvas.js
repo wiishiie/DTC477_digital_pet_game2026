@@ -1,12 +1,12 @@
 const canvas = document.getElementById('screen');
 const ctx = canvas.getContext('2d');
-
-
-window.mode = "home";
+const FRAME_SPEED = 80;
+const SPRITE_SIZE = 180;
 
 const W = 1000, H = 700, SIZE = 50, SPEED = 1;
 let x = (W - SIZE) / 2;
 let y = (H - SIZE) / 2;
+let facing = "idle";
 
 const keys = {};
 
@@ -14,11 +14,7 @@ const keys = {};
 document.addEventListener('keydown', (e) => {
   if (['ArrowUp','ArrowDown','ArrowLeft','ArrowRight'].includes(e.key)) {
     e.preventDefault();
-
-    // track key press
     keys[e.key] = true;
-
-    // lose if moving on red
     if (window.mode === "game" && gameStarted && light === "red" && !gameOver) {
       loseGame("You moved on RED!");
     }
@@ -31,34 +27,143 @@ document.addEventListener('keyup', (e) => {
   }
 });
 
+window.mode = "starter";
+
+// STARTER SCREEN
+const starterSprites = {};
+
+async function loadStarterSprites() {
+  const starters = ["cat", "dog", "fish"];
+  for (const animal of starters) {
+    const jsonPath = `sprite/${animal}/egg/egg-${animal}-idle.json`;
+    const imgPath  = `sprite/${animal}/egg/egg-${animal}-idle.png`;
+
+    const res = await fetch(jsonPath);
+    const data = await res.json();
+
+    const img = new Image();
+    img.src = imgPath;
+    await new Promise(resolve => img.onload = resolve);
+
+    starterSprites[animal] = {
+      img,
+      frames: Object.values(data.frames),
+      current: 0,
+      timer: 0,
+    };
+  }
+}
+
+const STARTER_POSITIONS = {
+  cat:  { x: 100,  y: 250 },
+  dog:  { x: 400, y: 250 },
+  fish: { x: 700, y: 250 },
+};
+
+function drawStarter() {
+  ctx.fillStyle = "#f5f5f5";
+  ctx.fillRect(0, 0, W, H);
+
+  ctx.fillStyle = "black";
+  ctx.font = "40px 'Jersey 10'";
+  ctx.fillText("Choose your pet!", 370, 600);
+
+  for (const [animal, sprite] of Object.entries(starterSprites)) {
+    sprite.timer++;
+    if (sprite.timer >= FRAME_SPEED) {
+      sprite.timer = 0;
+      sprite.current = (sprite.current + 1) % sprite.frames.length;
+    }
+
+    const frame = sprite.frames[sprite.current].frame;
+    const pos = STARTER_POSITIONS[animal];
+
+    ctx.strokeStyle = "black";
+    ctx.lineWidth = 3;
+    ctx.strokeRect(pos.x - 20, pos.y - 20, SPRITE_SIZE + 40, SPRITE_SIZE + 60);
+
+    ctx.drawImage(sprite.img, frame.x, frame.y, frame.w, frame.h, pos.x, pos.y, SPRITE_SIZE, SPRITE_SIZE);
+  }
+}
+
+canvas.addEventListener("click", (e) => {
+  if (window.mode !== "starter") return;
+
+  const rect = canvas.getBoundingClientRect();
+  const scaleX = canvas.width / rect.width;
+  const scaleY = canvas.height / rect.height;
+  const mouseX = (e.clientX - rect.left) * scaleX;
+  const mouseY = (e.clientY - rect.top) * scaleY;
+
+  console.log("clicked at:", mouseX, mouseY);
+
+  const animals = ["cat", "dog", "fish"];
+  for (const animal of animals) {
+    const pos = STARTER_POSITIONS[animal];
+    console.log(`checking ${animal}: x ${pos.x - 20} to ${pos.x + SPRITE_SIZE + 20}, y ${pos.y - 20} to ${pos.y + SPRITE_SIZE + 40}`);
+    if (mouseX >= pos.x - 20 && mouseX <= pos.x + SPRITE_SIZE + 20 &&
+        mouseY >= pos.y - 20 && mouseY <= pos.y + SPRITE_SIZE + 40) {
+      console.log("picked:", animal);
+      pickStarterPet(animal);
+      return;
+    }
+  }
+});
+
+// MOVEMENT
+function applyMovement() {
+  let moved = false;
+  if (keys['ArrowLeft'])  { x = Math.max(0, x - SPEED); facing = "left";  moved = true; }
+  if (keys['ArrowRight']) { x = Math.min(W - SIZE, x + SPEED); facing = "right"; moved = true; }
+  if (keys['ArrowUp'])    { y = Math.max(0, y - SPEED); facing = "up";    moved = true; }
+  if (keys['ArrowDown'])  { y = Math.min(H - SIZE, y + SPEED); facing = "down";  moved = true; }
+  if (!moved) facing = "idle";
+  return moved;
+}
+
+function drawPlayer(moving) {
+  const sprite = sprites[facing] || sprites["idle"];
+  if (!sprite) {
+    ctx.fillStyle = "black";
+    ctx.fillRect(x, y, SIZE, SIZE);
+    return;
+  }
+
+  sprite.timer++;
+  if (sprite.timer >= FRAME_SPEED) {
+    sprite.timer = 0;
+    sprite.current = (sprite.current + 1) % sprite.frames.length;
+  }
+
+  const frame = sprite.frames[sprite.current].frame;
+  ctx.drawImage(sprite.img, frame.x, frame.y, frame.w, frame.h, x, y, currentPet.size, currentPet.size);
+}
+
+// BACKGROUNDS
+const homeBg = new Image();
+homeBg.src = "sprite/visuals/cute-room.svg";
+
+const gameBg = new Image();
+gameBg.src = "sprite/visuals/game-bg.svg";
+
 // MAIN DRAW LOOP
 function draw() {
   ctx.clearRect(0, 0, W, H);
 
-  if (window.mode === "home") {
-    drawHome();
-  }
-
-  if (window.mode === "inventory") {
-    drawInventory();
-  }
-
-  if (window.mode === "shop") {
-    drawShop();
-  }
-
-  if (window.mode === "game") {
-    drawGame();
-  }
+  if (window.mode === "starter")   drawStarter();
+  if (window.mode === "home")      drawHome();
+  if (window.mode === "inventory") drawInventory();
+  if (window.mode === "shop")      drawShop();
+  if (window.mode === "game")      drawGame();
 
   requestAnimationFrame(draw);
 }
 
 // SCREENS
 function drawHome() {
-  ctx.fillStyle = "black";
-  ctx.font = "30px Arial";
-  ctx.fillText("HOME (pet room)", 350, 350);
+  ctx.drawImage(homeBg, 0, 0, W + 1, H + 1);
+  const moved = applyMovement();
+  drawPlayer(moved);
 }
 
 function drawInventory() {
@@ -69,36 +174,16 @@ function drawShop() {
   ctx.fillText("SHOP", 430, 350);
 }
 
-
-const gameBg = new Image();
-gameBg.src = "sprite/visuals/game-bg.svg";
-
-
-// GAME
 function drawGame() {
-  // background
   ctx.drawImage(gameBg, 0, 0, W + 1, H + 1);
-
-  // movement
-  if (window.mode === "game" && !gameOver) {
-    if (keys['ArrowLeft'])  x = Math.max(0, x - SPEED);
-    if (keys['ArrowRight']) x = Math.min(W - SIZE, x + SPEED);
-    if (keys['ArrowUp'])    y = Math.max(0, y - SPEED);
-    if (keys['ArrowDown'])  y = Math.min(H - SIZE, y + SPEED);
-  }
-
-  // player
-  ctx.fillStyle = "black";
-  ctx.fillRect(x, y, SIZE, SIZE);
-
-  // UI from your partner file
+  let moved = false;
+  if (!gameOver) moved = applyMovement();
+  drawPlayer(moved);
   drawGameUI();
-
-  if (gameStarted) {
-    checkWin();
-  }
+  if (gameStarted) checkWin();
 }
 
+// BUTTONS
 document.getElementById("homeBtn").onclick = () => { window.mode = "home"; };
 document.getElementById("inventoryBtn").onclick = () => { window.mode = "inventory"; };
 document.getElementById("shopBtn").onclick = () => { window.mode = "shop"; };
@@ -107,4 +192,4 @@ document.getElementById("gameBtn").onclick = () => {
   document.getElementById("startPopup").classList.remove("hidden");
 };
 
-draw();
+loadStarterSprites().then(() => draw());
