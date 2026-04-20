@@ -60,6 +60,34 @@
     </div>
   </div>
 
+   <!-- EA start popup — added by Riley -->
+  <div id="eaStartPopup" class="popup hidden">
+    <div class="popup-box">
+      <h2 style="margin-bottom:10px;">Enemy Avoidance</h2>
+      <ul style="text-align:left; margin-bottom:14px; line-height:1.8;">
+        <!--i jus did emojis bc idk what to do but they are just placeholders-->
+        <li>👾 5 enemies spawn around the arena</li>
+        <li>⏳ 3-second countdown locks movement</li>
+        <li>🏃 After countdown — run! Enemies chase you</li>
+        <li>⏱ Survive <strong>10 seconds</strong> to win</li>
+        <li>💀 If an enemy touches you, you lose</li>
+        <li>⬆️ Use arrow keys to move</li>
+      </ul>
+      <button id="eaStartBtn">Play</button>
+    </div>
+  </div>
+
+  <!-- EA end popup — added by Riley -->
+  <div id="eaEndPopup" class="popup hidden">
+    <div class="popup-box">
+      <p id="eaEndText" style="font-size:20px; margin-bottom:8px;"></p>
+      <p id="eaRewards" style="font-size:16px; margin-bottom:14px; color:#555;"></p>
+      <button id="eaHomeBtn">🏠 Home</button>
+    </div>
+  </div>
+
+
+
 
   <!--
 //----LOGIC STEPS----//
@@ -83,6 +111,7 @@
 
 -->
   <script src="red-light-green-light.js"></script>
+  <script src="enemy-avoidance.js"></script>
   <script src="canvas.js"></script>
   <script src="script.js"></script>
 

@@ -10,6 +10,17 @@ let y = (H - SIZE) / 2;
 
 const keys = {};
 
+// TRACKS WHICH MINI-GAME IS ACTIVE — added by Riley
+let activeGame = null;
+
+// HIDES ALL POPUPS — added by Riley
+function hideAllPopups() {
+  document.getElementById("startPopup").classList.add("hidden");
+  document.getElementById("endPopup").classList.add("hidden");
+  document.getElementById("eaStartPopup").classList.add("hidden");
+  document.getElementById("eaEndPopup").classList.add("hidden");
+}
+
 // KEY CONTROLS
 document.addEventListener('keydown', (e) => {
   if (['ArrowUp','ArrowDown','ArrowLeft','ArrowRight'].includes(e.key)) {
@@ -47,10 +58,15 @@ function draw() {
     drawShop();
   }
 
+  // routes to correct game — added by Riley
   if (window.mode === "game") {
-    drawGame();
+    if (activeGame === "ea") {
+      drawEnemyAvoidance();
+    } else {
+      drawGame(); // red light green light
+    }
   }
-
+ 
   requestAnimationFrame(draw);
 }
 
@@ -99,12 +115,45 @@ function drawGame() {
   }
 }
 
-document.getElementById("homeBtn").onclick = () => { window.mode = "home"; };
-document.getElementById("inventoryBtn").onclick = () => { window.mode = "inventory"; };
-document.getElementById("shopBtn").onclick = () => { window.mode = "shop"; };
+// NAV BUTTONS — hide all popups when switching screens
+document.getElementById("homeBtn").onclick = () => {
+  window.mode = "home";
+  hideAllPopups();
+};
+ 
+document.getElementById("inventoryBtn").onclick = () => {
+  window.mode = "inventory";
+  hideAllPopups();
+};
+ 
+document.getElementById("shopBtn").onclick = () => {
+  window.mode = "shop";
+  hideAllPopups();
+};
+
+// GAME BUTTON — randomly picks a game — added by Riley
 document.getElementById("gameBtn").onclick = () => {
+  const pick = Math.random() < 0.5 ? "rlgl" : "ea";
+  activeGame = pick;
   window.mode = "game";
-  document.getElementById("startPopup").classList.remove("hidden");
+ 
+  if (pick === "rlgl") {
+    document.getElementById("startPopup").classList.remove("hidden");
+  } else {
+    document.getElementById("eaStartPopup").classList.remove("hidden");
+  }
+};
+ 
+// EA BUTTONS — added by Riley
+document.getElementById("eaStartBtn").onclick = () => {
+  document.getElementById("eaStartPopup").classList.add("hidden");
+  startEnemyAvoidance();
+};
+ 
+document.getElementById("eaHomeBtn").onclick = () => {
+  resetEnemyAvoidance();
+  activeGame = null;
+  window.mode = "home";
 };
 
 draw();
