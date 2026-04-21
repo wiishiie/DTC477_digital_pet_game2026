@@ -199,23 +199,24 @@ document.getElementById("homeBtn").onclick = () => { window.mode = "home"; };
 document.getElementById("inventoryBtn").onclick = () => { window.mode = "inventory"; };
 document.getElementById("shopBtn").onclick = () => { window.mode = "shop"; };
 document.getElementById("gameBtn").onclick = () => {
+  loseHunger(2); // lose 2 hunger every time a game is started
   const pick = Math.random() < 0.5 ? "rlgl" : "ea";
   activeGame = pick;
   window.mode = "game";
- 
+
   if (pick === "rlgl") {
     document.getElementById("startPopup").classList.remove("hidden");
   } else {
     document.getElementById("eaStartPopup").classList.remove("hidden");
   }
 };
- 
+
 // EA BUTTONS — added by Riley
 document.getElementById("eaStartBtn").onclick = () => {
   document.getElementById("eaStartPopup").classList.add("hidden");
   startEnemyAvoidance();
 };
- 
+
 document.getElementById("eaHomeBtn").onclick = () => {
   resetEnemyAvoidance();
   activeGame = null;
