@@ -261,13 +261,16 @@ button img {
 }
  
 .hunger-slot.full {
-  background: #f0a8bc;
-  box-shadow: inset -2px -2px 0 #c45878;
+  width: 100px;
+  height: 100px;
+  background: url(sprite/visuals/hungar.svg);
+  background-repeat: none;
 }
  
 .hunger-slot.empty {
-  background: #e8d8c4;
-  box-shadow: inset 1px 1px 0 #c4b090;
+  width: 100px;
+  height: 100px;
+  background: url(sprite/visuals/empty-hunger.svg);
 }
  
  
