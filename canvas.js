@@ -3,7 +3,7 @@ const ctx = canvas.getContext('2d');
 const FRAME_SPEED = 80;
 const SPRITE_SIZE = 180;
 
-const W = 1000, H = 700, SIZE = 50, SPEED = 2;
+const W = 1000, H = 700, SIZE = 50, SPEED = 1.5;
 let x = (W - SIZE) / 4;
 let y = (H - SIZE) / 4;
 let facing = "idle";
