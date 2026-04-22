@@ -14,6 +14,12 @@ body {
   background-position: center;
   background-repeat: no-repeat;
 }
+
+canvas {
+  width: 50vw;
+  height: 70vh;
+  image-rendering: pixelated;
+}
  
 /* TITLE */
 h1 {
@@ -247,7 +253,6 @@ button img {
 .hunger-slot {
   width: 20px;
   height: 20px;
-  border: 3px solid #3d2b1a;
 }
  
 .hunger-slot.full {
