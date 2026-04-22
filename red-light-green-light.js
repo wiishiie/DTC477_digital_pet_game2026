@@ -1,10 +1,15 @@
 let gameStarted = false;
 let gameOver = false;
 let light = "green";
- 
 let gameTimer = 7;
 let goalLine = 50;
- 
+
+const greenLight = new Image();
+greenLight.src = "sprite/visuals/green-light.svg";
+
+const redLight = new Image();
+redLight.src = "sprite/visuals/red-light.svg";
+
 // START BUTTON
 document.getElementById("startBtn").onclick = () => {
   document.getElementById("startPopup").classList.add("hidden");
@@ -64,13 +69,17 @@ function startTimer() {
  
 // UI
 function drawGameUI() {
-  ctx.fillStyle = light === "green" ? "green" : "red";
-  ctx.fillRect(20, 20, 50, 50);
- 
+  const img = light === "green" ? greenLight : redLight;
+
+  const width = 80;
+  const ratio = img.height / img.width || 1; // fallback
+  const height = width * ratio;
+
+  ctx.drawImage(img, 20, 20, width, height);
+
   ctx.fillStyle = "blue";
   ctx.fillRect(0, goalLine, W, 5);
 }
- 
 // WIN
 function checkWin() {
   if (y <= goalLine && !gameOver) {
