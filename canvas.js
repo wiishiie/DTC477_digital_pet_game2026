@@ -188,11 +188,40 @@ function drawShop() {
 
 function drawGame() {
   ctx.drawImage(gameBg, 0, 0, W + 1, H + 1);
+
+  // switch between games
+  if (activeGame === "rlgl") {
+    let moved = false;
+    if (!gameOver) moved = applyMovement();
+
+    drawPlayer(moved);
+    drawGameUI();
+
+    if (gameStarted) checkWin();
+  }
+
+  if (activeGame === "ea") {
+    drawEnemyAvoidance();
+  }
+}
+
+function drawEnemyAvoidance() {
   let moved = false;
   if (!gameOver) moved = applyMovement();
+
   drawPlayer(moved);
-  drawGameUI();
-  if (gameStarted) checkWin();
+
+  // just to prove it's working
+  ctx.fillStyle = "red";
+  ctx.fillRect(200, 200, 50, 50);
+
+  ctx.fillStyle = "black";
+  ctx.fillText("Enemy Avoidance Running", 300, 50);
+}
+
+function startEnemyAvoidance() {
+  gameStarted = true;
+  gameOver = false;
 }
 
 // BUTTONS
