@@ -22,28 +22,30 @@ let eaSurviveTimer = 10;    // 10 seconds to survive
 let eaCountdownInterval = null;
 let eaTimerInterval = null;
 let eaMoveLocked = true;    // player can't move during countdown
-
+ 
 // - ENEMIES -
 const ENEMY_COUNT = 5;
 const ENEMY_SIZE = 40;
 const ENEMY_SPEED = 0.82; // slightly slower than player SPEED (1)
-
+ 
 let enemies = [];
-
+ 
 function spawnEnemies() {
     enemies = [];
     for (let i = 0; i < ENEMY_COUNT; i++) {
         let ex, ey;
-        // keep enemies away from player start (center)
+        // FIX: was (&&) — enemies only re-rolled if close on BOTH axes at once,
+        // so they could spawn on the player and cause an instant invisible death.
+        // Changed to (||) so they re-roll if close on EITHER axis.
         do {
             ex = Math.random() * (W - ENEMY_SIZE);
             ey = Math.random() * (H - ENEMY_SIZE);
-        } while (Math.abs(ex - x) < 150 && Math.abs(ey - y) < 150);
-
+        } while (Math.abs(ex - x) < 150 || Math.abs(ey - y) < 150);
+ 
         enemies.push({ x: ex, y: ey });
     }
 }
-
+ 
 // - START -
 function startEnemyAvoidance() {
     // reset everything
@@ -52,13 +54,13 @@ function startEnemyAvoidance() {
     eaCountdown = 3;
     eaSurviveTimer = 10;
     eaMoveLocked = true;
-
+ 
     // reset player to center
     x = (W - SIZE) / 2;
     y = (H - SIZE) / 2;
-
+ 
     spawnEnemies();
-
+ 
     // 3-second countdown, then unlock movement and start survival timer
     eaCountdownInterval = setInterval(() => {
         eaCountdown--;
@@ -69,7 +71,7 @@ function startEnemyAvoidance() {
         }
     }, 1000);
 }
-
+ 
 function startEaSurviveTimer() {
     eaTimerInterval = setInterval(() => {
         if (eaOver) { clearInterval(eaTimerInterval); return; }
@@ -80,11 +82,11 @@ function startEaSurviveTimer() {
         }
     }, 1000);
 }
-
+ 
 // -- UPDATE --
 function updateEnemies() {
     if (!eaActive || eaOver || eaMoveLocked) return;
-
+ 
     for (const e of enemies) {
         const dx = x - e.x;
         const dy = y - e.y;
@@ -93,7 +95,7 @@ function updateEnemies() {
             e.x += (dx / dist) * ENEMY_SPEED;
             e.y += (dy / dist) * ENEMY_SPEED;
         }
-
+ 
         // collision check (AABB)
         if (
             x < e.x + ENEMY_SIZE &&
@@ -106,47 +108,45 @@ function updateEnemies() {
         }
     }
 }
-
+ 
 // -- DRAW --
 function drawEnemyAvoidance() {
     // background — reuse game bg from canvas.js
     ctx.drawImage(gameBg, 0, 0, W + 1, H + 1);
-
+ 
     // move player (only if not locked and game not over)
     if (!eaMoveLocked && !eaOver) {
-        if (keys['ArrowLeft']) x = Math.max(0, x - SPEED);
+        if (keys['ArrowLeft'])  x = Math.max(0, x - SPEED);
         if (keys['ArrowRight']) x = Math.min(W - SIZE, x + SPEED);
-        if (keys['ArrowUp']) y = Math.max(0, y - SPEED);
-        if (keys['ArrowDown']) y = Math.min(H - SIZE, y + SPEED);
+        if (keys['ArrowUp'])    y = Math.max(0, y - SPEED);
+        if (keys['ArrowDown'])  y = Math.min(H - SIZE, y + SPEED);
     }
-
+ 
     updateEnemies();
-
-    // draw enemies (red squares)
-    ctx.fillStyle = "#cc2222";
+ 
+    // draw enemies (red squares with eyes)
     for (const e of enemies) {
+        ctx.fillStyle = "#cc2222";
         ctx.fillRect(e.x, e.y, ENEMY_SIZE, ENEMY_SIZE);
         // little eye detail
         ctx.fillStyle = "white";
-        ctx.fillRect(e.x + 8, e.y + 10, 8, 8);
+        ctx.fillRect(e.x + 8,  e.y + 10, 8, 8);
         ctx.fillRect(e.x + 24, e.y + 10, 8, 8);
         ctx.fillStyle = "black";
         ctx.fillRect(e.x + 11, e.y + 13, 4, 4);
         ctx.fillRect(e.x + 27, e.y + 13, 4, 4);
-        ctx.fillStyle = "#cc2222"; // reset for next enemy
     }
-
-    // draw player (black square)
-    ctx.fillStyle = "black";
-    ctx.fillRect(x, y, SIZE, SIZE);
-
+ 
+    // FIX: use drawPlayer() so the sprite renders instead of a plain black square
+    drawPlayer(false);
+ 
     //-- HUD --
     ctx.fillStyle = "rgba(0,0,0,0.45)";
-    ctx.fillRect(10, 10, 200, 60);
-
+    ctx.fillRect(10, 10, 220, 60);
+ 
     ctx.fillStyle = "white";
     ctx.font = "bold 20px Arial";
-
+ 
     if (eaMoveLocked && eaCountdown > 0) {
         ctx.fillText(`Starting in: ${eaCountdown}`, 20, 40);
         ctx.font = "16px Arial";
@@ -157,34 +157,31 @@ function drawEnemyAvoidance() {
         ctx.fillText("Survive the enemies!", 20, 62);
     }
 }
-
+ 
 // -- WIN / LOSE --
 function eaWin() {
     eaOver = true;
-
+ 
     // randomize rewards
     const coins = Math.floor(Math.random() * 51) + 20;  // 20–70
-    const exp = Math.floor(Math.random() * 31) + 10;  // 10–40
-
-    const popup = document.getElementById("eaEndPopup");
+    const exp   = Math.floor(Math.random() * 31) + 10;  // 10–40
+ 
     document.getElementById("eaEndText").innerText = "You Survived! 🎉";
-    document.getElementById("eaRewards").innerText =
-        `coins: $${coins}   exp: ${exp}`;
-    popup.classList.remove("hidden");
+    document.getElementById("eaRewards").innerText = `coins: $${coins}   exp: ${exp}`;
+    document.getElementById("eaEndPopup").classList.remove("hidden");
 }
-
+ 
 function eaLose() {
     if (eaOver) return;
     eaOver = true;
     clearInterval(eaTimerInterval);
     clearInterval(eaCountdownInterval);
-
-    const popup = document.getElementById("eaEndPopup");
+ 
     document.getElementById("eaEndText").innerText = "You were caught! 💀";
     document.getElementById("eaRewards").innerText = "";
-    popup.classList.remove("hidden");
+    document.getElementById("eaEndPopup").classList.remove("hidden");
 }
-
+ 
 // -- RESET --
 function resetEnemyAvoidance() {
     eaActive = false;
@@ -195,10 +192,10 @@ function resetEnemyAvoidance() {
     enemies = [];
     clearInterval(eaTimerInterval);
     clearInterval(eaCountdownInterval);
-
+ 
     document.getElementById("eaEndPopup").classList.add("hidden");
     document.getElementById("eaStartPopup").classList.add("hidden");
-
+ 
     x = (W - SIZE) / 2;
     y = (H - SIZE) / 2;
 }
