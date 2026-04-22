@@ -164,7 +164,7 @@ function eaWin() {
  
     // randomize rewards
     const coins = Math.floor(Math.random() * 51) + 20;  // 20–70
-    const exp   = Math.floor(Math.random() * 31) + 10;  // 10–40
+    const exp   = Math.floor(Math.random() * 51) + 50;  // 10–40
  
     document.getElementById("eaEndText").innerText = "You Survived! 🎉";
     document.getElementById("eaRewards").innerText = `coins: $${coins}   exp: ${exp}`;

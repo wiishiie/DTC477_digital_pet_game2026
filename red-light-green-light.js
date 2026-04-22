@@ -91,7 +91,7 @@ function winGame() {
   gameOver = true;
  
   // Random rewards between 20–50
-  const earnedExp   = Math.floor(Math.random() * 31) + 50;
+  const earnedExp   = Math.floor(Math.random() * 51) + 50;
   const earnedCoins = Math.floor(Math.random() * 31) + 20;
  
   // Show rewards in the popup

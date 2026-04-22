@@ -64,3 +64,47 @@ function pickStarterPet(animal) {
   });
 }
 
+
+function pickStarterPet(animal) {
+  currentAnimal = animal;
+  currentStage  = "egg";
+  currentPet    = petData[currentAnimal][currentStage];
+  loadAllSprites().then(() => {
+    window.mode = "home";
+  });
+}
+
+// ← ADD THE LEVEL SYSTEM RIGHT HERE
+
+let petXP = 0;
+let petLevel = 0;
+
+const XP_THRESHOLDS = [0, 100, 300, 600];
+const STAGE_FOR_LEVEL = ["egg", "level1", "level2", "level3"];
+
+function addXP(amount) {
+  petXP += amount;
+  checkEvolution();
+}
+
+function checkEvolution() {
+  let newLevel = 0;
+  for (let i = XP_THRESHOLDS.length - 1; i >= 0; i--) {
+    if (petXP >= XP_THRESHOLDS[i]) {
+      newLevel = i;
+      break;
+    }
+  }
+  if (newLevel > petLevel) {
+    petLevel = newLevel;
+    evolve(STAGE_FOR_LEVEL[petLevel]);
+  }
+}
+
+function evolve(newStage) {
+  currentStage = newStage;
+  currentPet = petData[currentAnimal][currentStage];
+  loadAllSprites();
+  console.log(`Evolved to ${newStage}!`);
+}
+
