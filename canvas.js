@@ -26,7 +26,7 @@ document.addEventListener('keydown', (e) => {
   if (['ArrowUp','ArrowDown','ArrowLeft','ArrowRight'].includes(e.key)) {
     e.preventDefault();
     keys[e.key] = true;
-    if (window.mode === "game" && gameStarted && light === "red" && !gameOver) {
+   if (activeGame === "rlgl" && window.mode === "game" && gameStarted && light === "red" && !gameOver) {
       loseGame("You moved on RED!");
     }
   }
@@ -184,6 +184,7 @@ function drawInventory() {
 function drawShop() {
   ctx.fillText("SHOP", 430, 350);
 }
+
 
 function drawGame() {
   ctx.drawImage(gameBg, 0, 0, W + 1, H + 1);
