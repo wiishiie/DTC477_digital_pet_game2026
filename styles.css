@@ -39,7 +39,7 @@ h1 {
 #screen {
   display: block;
   margin: 20px auto;
-  border: 3px solid black;
+  border: 3px solid rgb(235, 231, 123);
   background: #f5f5f5;
   display: flex;
 }
@@ -56,33 +56,58 @@ h1 {
   top: 30px;
   left: 10vw;
 }
- 
+
 button {
   background: none;
   border: none;
   padding: 10px 20px;
   cursor: pointer;
+  transition: transform 0.1s ease, filter 0.1s ease;
 }
- 
+
+button:hover {
+  filter: brightness(1.1);
+  transform: translateY(-2px);
+}
+
+button:active {
+  transform: translateY(3px);
+  filter: brightness(0.9);
+}
+
 button img {
   width: 8vw;
   height: 8vw;
+  filter: drop-shadow(3px 3px 0px rgba(0,0,0,0.3));
+}
+
+button:active img {
+  filter: drop-shadow(1px 1px 0px rgba(0,0,0,0.2));
 }
  
 /* CURRENCY */
-#currency {
-  font-size: 2.5vw;
+
+#currencyBar {
   position: fixed;
-  top: 2.5vw;
-  right: 2vw;
+  top: 2vw;
+  right: 4vw;
+  display: flex;
+  align-items: center;
+  gap: 10px;
   z-index: 100;
+  font-size: 30px;
 }
+
+#flowerIcon {
+  width: 3vw;
+}
+
 
 #coinBox{
   width: 7vw;
   position: fixed;
   top: 0.1vw;
-  right: 1vw;
+  right: 2vw;
 }
 
 #titleBox {
@@ -114,7 +139,7 @@ button img {
   justify-content: center;
   align-items: center;
  
-  z-index: 10;
+  z-index: 1000;
 }
  
 .popup-box {

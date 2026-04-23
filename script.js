@@ -1,18 +1,13 @@
-// document.getElementById("homeBtn").onclick = () => {
-//   window.mode = "home";
-// };
+// --- CURRENCY ---
+window.flowers = 0;
 
-// document.getElementById("inventoryBtn").onclick = () => {
-//   window.mode = "inventory";
-// };
+function updateCurrencyUI() {
+  const el = document.getElementById("currency");
+  if (el) el.textContent = window.flowers;
+}
 
-// document.getElementById("shopBtn").onclick = () => {
-//   window.mode = "shop";
-// };
-
-// document.getElementById("gameBtn").onclick = () => {
-//   window.mode = "game";
-
-//   // show start popup
-//   document.getElementById("startPopup").classList.remove("hidden");
-// };
+// --- HUNGER (delegates to food-exp-bars.js) ---
+function addHunger(amount) {
+  hunger = Math.min(MAX_HUNGER, hunger + amount);
+  if (typeof updateHungerDisplay === "function") updateHungerDisplay();
+}

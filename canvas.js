@@ -26,7 +26,7 @@ document.addEventListener('keydown', (e) => {
   if (['ArrowUp','ArrowDown','ArrowLeft','ArrowRight'].includes(e.key)) {
     e.preventDefault();
     keys[e.key] = true;
-   if (activeGame === "rlgl" && window.mode === "game" && gameStarted && light === "red" && !gameOver) {
+    if (activeGame === "rlgl" && window.mode === "game" && gameStarted && light === "red" && !gameOver) {
       loseGame("You moved on RED!");
     }
   }
@@ -66,18 +66,53 @@ async function loadStarterSprites() {
 }
 
 const STARTER_POSITIONS = {
-  cat:  { x: 100,  y: 250 },
+  cat:  { x: 100, y: 250 },
   dog:  { x: 400, y: 250 },
   fish: { x: 700, y: 250 },
 };
 
 function drawStarter() {
-  ctx.fillStyle = "#f5f5f5";
+  // pastel gradient background
+  const grad = ctx.createLinearGradient(0, 0, 0, H);
+  grad.addColorStop(0, "#ffd6e7");
+  grad.addColorStop(1, "#fff0f6");
+  ctx.fillStyle = grad;
   ctx.fillRect(0, 0, W, H);
 
-  ctx.fillStyle = "black";
-  ctx.font = "40px 'Jersey 10'";
-  ctx.fillText("Choose your pet!", 370, 600);
+  // little star decorations
+  const stars = [
+    {x: 80, y: 80}, {x: 920, y: 60}, {x: 150, y: 550},
+    {x: 850, y: 500}, {x: 500, y: 60}, {x: 70, y: 350},
+    {x: 940, y: 300}, {x: 300, y: 620}, {x: 700, y: 630}
+  ];
+  ctx.fillStyle = "#ffb3d1";
+  for (const s of stars) {
+    ctx.font = "24px Arial";
+    ctx.textAlign = "center";
+    ctx.fillText("✦", s.x, s.y);
+  }
+
+  // title box
+  ctx.fillStyle = "#ff85b3";
+  ctx.strokeStyle = "#c45878";
+  ctx.lineWidth = 4;
+  ctx.beginPath();
+  ctx.roundRect(W/2 - 260, 30, 520, 80, 20);
+  ctx.fill();
+  ctx.stroke();
+
+  // title text
+  ctx.fillStyle = "white";
+  ctx.font = "bold 52px 'Jersey 10'";
+  ctx.textAlign = "center";
+  ctx.fillText("✦ Choose Your Pet! ✦", W / 2, 88);
+
+  // subtitle
+  ctx.fillStyle = "#c45878";
+  ctx.font = "30px 'Jersey 10'";
+  ctx.fillText("pick your companion to start your journey", W / 2, 145);
+
+  const petNames = { cat: "Cat", dog: "Dog", fish: "Fish" };
 
   for (const [animal, sprite] of Object.entries(starterSprites)) {
     sprite.timer++;
@@ -89,34 +124,91 @@ function drawStarter() {
     const frame = sprite.frames[sprite.current].frame;
     const pos = STARTER_POSITIONS[animal];
 
-    ctx.strokeStyle = "black";
-    ctx.lineWidth = 3;
-    ctx.strokeRect(pos.x - 20, pos.y - 20, SPRITE_SIZE + 40, SPRITE_SIZE + 60);
+    // card shadow
+    ctx.fillStyle = "rgba(196, 88, 120, 0.15)";
+    ctx.beginPath();
+    ctx.roundRect(pos.x - 20 + 6, pos.y - 20 + 6, SPRITE_SIZE + 40, SPRITE_SIZE + 80, 16);
+    ctx.fill();
 
+    // card background
+    ctx.fillStyle = "#fff0f6";
+    ctx.strokeStyle = "#f0a8bc";
+    ctx.lineWidth = 4;
+    ctx.beginPath();
+    ctx.roundRect(pos.x - 20, pos.y - 20, SPRITE_SIZE + 40, SPRITE_SIZE + 80, 16);
+    ctx.fill();
+    ctx.stroke();
+
+    // pet sprite
     ctx.drawImage(sprite.img, frame.x, frame.y, frame.w, frame.h, pos.x, pos.y, SPRITE_SIZE, SPRITE_SIZE);
+
+    // pet name badge
+    ctx.fillStyle = "#ff85b3";
+    ctx.strokeStyle = "#c45878";
+    ctx.lineWidth = 3;
+    ctx.beginPath();
+    ctx.roundRect(pos.x - 10, pos.y + SPRITE_SIZE + 10, SPRITE_SIZE + 20, 36, 10);
+    ctx.fill();
+    ctx.stroke();
+
+    ctx.fillStyle = "white";
+    ctx.font = "bold 26px 'Jersey 10'";
+    ctx.textAlign = "center";
+    ctx.fillText(petNames[animal], pos.x + SPRITE_SIZE / 2, pos.y + SPRITE_SIZE + 34);
   }
+
+  ctx.textAlign = "left";
 }
 
 canvas.addEventListener("click", (e) => {
-  if (window.mode !== "starter") return;
+  if (window.mode === "starter") {
+    const rect = canvas.getBoundingClientRect();
+    const scaleX = canvas.width / rect.width;
+    const scaleY = canvas.height / rect.height;
+    const mouseX = (e.clientX - rect.left) * scaleX;
+    const mouseY = (e.clientY - rect.top) * scaleY;
 
-  const rect = canvas.getBoundingClientRect();
-  const scaleX = canvas.width / rect.width;
-  const scaleY = canvas.height / rect.height;
-  const mouseX = (e.clientX - rect.left) * scaleX;
-  const mouseY = (e.clientY - rect.top) * scaleY;
+    const animals = ["cat", "dog", "fish"];
+    for (const animal of animals) {
+      const pos = STARTER_POSITIONS[animal];
+      if (mouseX >= pos.x - 20 && mouseX <= pos.x + SPRITE_SIZE + 20 &&
+          mouseY >= pos.y - 20 && mouseY <= pos.y + SPRITE_SIZE + 40) {
+        pickStarterPet(animal);
+        return;
+      }
+    }
+    return;
+  }
 
-  console.log("clicked at:", mouseX, mouseY);
+  if (window.mode === "shop") {
+    const rect = canvas.getBoundingClientRect();
+    const scaleX = canvas.width / rect.width;
+    const scaleY = canvas.height / rect.height;
+    const mouseX = (e.clientX - rect.left) * scaleX;
+    const mouseY = (e.clientY - rect.top) * scaleY;
 
-  const animals = ["cat", "dog", "fish"];
-  for (const animal of animals) {
-    const pos = STARTER_POSITIONS[animal];
-    console.log(`checking ${animal}: x ${pos.x - 20} to ${pos.x + SPRITE_SIZE + 20}, y ${pos.y - 20} to ${pos.y + SPRITE_SIZE + 40}`);
-    if (mouseX >= pos.x - 20 && mouseX <= pos.x + SPRITE_SIZE + 20 &&
-        mouseY >= pos.y - 20 && mouseY <= pos.y + SPRITE_SIZE + 40) {
-      console.log("picked:", animal);
-      pickStarterPet(animal);
-      return;
+    const cardW = 220;
+    const cardH = 300;
+    const startX = (W - (SHOP_ITEMS.length * cardW + (SHOP_ITEMS.length - 1) * 40)) / 2;
+    const cardY = 150;
+
+    for (let i = 0; i < SHOP_ITEMS.length; i++) {
+      const item = SHOP_ITEMS[i];
+      const cx = startX + i * (cardW + 40);
+
+      if (mouseX >= cx && mouseX <= cx + cardW &&
+          mouseY >= cardY && mouseY <= cardY + cardH) {
+
+        if (window.flowers >= item.cost) {
+          window.flowers -= item.cost;
+          updateCurrencyUI();
+          addHunger(item.hunger);
+          showShopFeedback(`Bought ${item.name}! +${item.hunger} hunger 🌸`);
+        } else {
+          showShopFeedback("Not enough flowers! 🌸");
+        }
+        return;
+      }
     }
   }
 });
@@ -157,6 +249,31 @@ homeBg.src = "sprite/visuals/cute-room.svg";
 const gameBg = new Image();
 gameBg.src = "sprite/visuals/game-bg.svg";
 
+// --- SHOP ---
+const SHOP_ITEMS = [
+  { name: "Cupcake", img: "sprite/visuals/cupcake.svg", cost: 200, hunger: 2 },
+  { name: "Pancake", img: "sprite/visuals/pancake.svg", cost: 200, hunger: 2 },
+  { name: "Sushi",   img: "sprite/visuals/sushi.svg",   cost: 200, hunger: 2 },
+];
+
+const shopImgs = {};
+for (const item of SHOP_ITEMS) {
+  const img = new Image();
+  img.src = item.img;
+  shopImgs[item.name] = img;
+}
+
+const flowerIconShop = new Image();
+flowerIconShop.src = "sprite/visuals/flower.svg";
+
+let shopFeedbackMsg = "";
+let shopFeedbackTimer = 0;
+
+function showShopFeedback(msg) {
+  shopFeedbackMsg = msg;
+  shopFeedbackTimer = 120;
+}
+
 // MAIN DRAW LOOP
 function draw() {
   ctx.clearRect(0, 0, W, H);
@@ -178,18 +295,149 @@ function drawHome() {
 }
 
 function drawInventory() {
-  ctx.fillText("INVENTORY", 400, 350);
+  ctx.fillStyle = "#f5f5f5";
+  ctx.fillRect(0, 0, W, H);
+  ctx.fillStyle = "#3d2b1a";
+  ctx.font = "48px 'Jersey 10'";
+  ctx.textAlign = "center";
+  ctx.fillText("INVENTORY", W / 2, 350);
+  ctx.textAlign = "left";
 }
 
 function drawShop() {
-  ctx.fillText("SHOP", 430, 350);
+  // background
+  // pastel gradient background
+const grad = ctx.createLinearGradient(0, 0, 0, H);
+grad.addColorStop(0, "#ffd6e7");
+grad.addColorStop(1, "#fff0f6");
+ctx.fillStyle = grad;
+ctx.fillRect(0, 0, W, H);
+
+// sparkle decorations
+ctx.fillStyle = "#ffb3d1";
+ctx.font = "24px Arial";
+ctx.textAlign = "center";
+const sparkles = [
+  {x: 80, y: 80}, {x: 920, y: 60}, {x: 150, y: 550},
+  {x: 850, y: 500}, {x: 500, y: 60}, {x: 70, y: 350},
+  {x: 940, y: 300}, {x: 300, y: 620}, {x: 700, y: 630}
+];
+for (const s of sparkles) {
+  ctx.fillText("✦", s.x, s.y);
 }
 
+  // title
+  // title box
+ctx.fillStyle = "#ff85b3";
+ctx.strokeStyle = "#c45878";
+ctx.lineWidth = 4;
+ctx.beginPath();
+ctx.roundRect(W/2 - 160, 30, 320, 80, 20);
+ctx.fill();
+ctx.stroke();
+
+// title text
+ctx.fillStyle = "white";
+ctx.font = "bold 52px 'Jersey 10'";
+ctx.textAlign = "center";
+ctx.fillText("✦ SHOP ✦", W / 2, 88);
+
+  // flower balance top right
+  // flower balance badge top right
+const badgeW = 220;
+const badgeH = 64;
+const badgeX = W - badgeW - 20;
+const badgeY = 14;
+
+ctx.fillStyle = "#fef08a";
+ctx.strokeStyle = "#c8860a";
+ctx.lineWidth = 3;
+ctx.beginPath();
+ctx.roundRect(badgeX, badgeY, badgeW, badgeH, 10);
+ctx.fill();
+ctx.stroke();
+
+ctx.drawImage(flowerIconShop, badgeX + 10, badgeY + 7, 50, 50);
+ctx.fillStyle = "#3d2b1a";
+ctx.font = "44px 'Jersey 10'";
+ctx.textAlign = "left";
+ctx.fillText(window.flowers, badgeX + 68, badgeY + 44);
+
+  const cardW = 220;
+  const cardH = 300;
+  const startX = (W - (SHOP_ITEMS.length * cardW + (SHOP_ITEMS.length - 1) * 40)) / 2;
+  const cardY = 200;
+
+  for (let i = 0; i < SHOP_ITEMS.length; i++) {
+    const item = SHOP_ITEMS[i];
+    const cx = startX + i * (cardW + 40);
+
+    // card background
+    ctx.fillStyle = "#fff8f0";
+    ctx.strokeStyle = "#c45878";
+    ctx.lineWidth = 4;
+    ctx.beginPath();
+    ctx.roundRect(cx, cardY, cardW, cardH, 12);
+    ctx.fill();
+    ctx.stroke();
+
+    // food sprite
+    ctx.drawImage(shopImgs[item.name], cx + 30, cardY + 20, 160, 160);
+
+    // item name
+    ctx.fillStyle = "#3d2b1a";
+    ctx.font = "bold 26px 'Jersey 10'";
+    ctx.textAlign = "center";
+    ctx.fillText(item.name, cx + cardW / 2, cardY + 205);
+
+    
+  // cost badge
+const badgeX = cx + 20;
+const badgeY = cardY + 220;
+const badgeW = cardW - 40;
+const badgeH = 48;
+
+ctx.fillStyle = "#f5dc91";
+ctx.strokeStyle = "#c8860a";
+ctx.lineWidth = 3;
+ctx.beginPath();
+ctx.roundRect(badgeX, badgeY, badgeW, badgeH, 8);
+ctx.fill();
+ctx.stroke();
+
+// center the flower icon + cost together
+const totalContentW = 36 + 8 + ctx.measureText(`${item.cost}`).width;
+const contentStartX = badgeX + (badgeW - totalContentW) / 2;
+
+ctx.drawImage(flowerIconShop, contentStartX, badgeY + 4, 44, 44);
+ctx.fillStyle = "#3d2b1a";
+ctx.font = "28px 'Jersey 10'";
+ctx.textAlign = "left";
+ctx.fillText(`${item.cost}`, contentStartX + 44, badgeY + 32);
+    // hunger reward
+    ctx.fillStyle = "#c45878";
+    ctx.font = "26px 'Jersey 10'";
+    ctx.textAlign = "center";
+    ctx.fillText(`+${item.hunger} hunger`, cx + cardW / 2, cardY + 290);
+  }
+
+  // feedback toast
+  if (shopFeedbackTimer > 0) {
+    ctx.globalAlpha = Math.min(1, shopFeedbackTimer / 30);
+    ctx.fillStyle = "#3d2b1a";
+    ctx.font = "bold 40px 'Jersey 10'";
+    ctx.textAlign = "center";
+    ctx.fillText(shopFeedbackMsg, W / 2, H - 40);
+    ctx.globalAlpha = 1;
+    shopFeedbackTimer--;
+  }
+
+  ctx.textAlign = "left";
+}
 
 function drawGame() {
   ctx.drawImage(gameBg, 0, 0, W + 1, H + 1);
 
-  // switch between games
   if (activeGame === "rlgl") {
     let moved = false;
     if (!gameOver) moved = applyMovement();
@@ -205,31 +453,12 @@ function drawGame() {
   }
 }
 
-function drawEnemyAvoidance() {
-  let moved = false;
-  if (!gameOver) moved = applyMovement();
-
-  drawPlayer(moved);
-
-  // just to prove it's working
-  ctx.fillStyle = "red";
-  ctx.fillRect(200, 200, 50, 50);
-
-  ctx.fillStyle = "black";
-  ctx.fillText("Enemy Avoidance Running", 300, 50);
-}
-
-function startEnemyAvoidance() {
-  gameStarted = true;
-  gameOver = false;
-}
-
 // BUTTONS
 document.getElementById("homeBtn").onclick = () => { window.mode = "home"; };
 document.getElementById("inventoryBtn").onclick = () => { window.mode = "inventory"; };
 document.getElementById("shopBtn").onclick = () => { window.mode = "shop"; };
 document.getElementById("gameBtn").onclick = () => {
-  loseHunger(2); // lose 2 hunger every time a game is started
+  loseHunger(2);
   const pick = Math.random() < 0.5 ? "rlgl" : "ea";
   activeGame = pick;
   window.mode = "game";
@@ -254,3 +483,57 @@ document.getElementById("eaHomeBtn").onclick = () => {
 };
 
 loadStarterSprites().then(() => draw());
+
+canvas.addEventListener("mousemove", (e) => {
+  if (window.mode !== "shop") {
+    canvas.style.cursor = "default";
+    return;
+  }
+
+  const rect = canvas.getBoundingClientRect();
+  const scaleX = canvas.width / rect.width;
+  const scaleY = canvas.height / rect.height;
+  const mouseX = (e.clientX - rect.left) * scaleX;
+  const mouseY = (e.clientY - rect.top) * scaleY;
+
+  const cardW = 220;
+  const cardH = 300;
+  const startX = (W - (SHOP_ITEMS.length * cardW + (SHOP_ITEMS.length - 1) * 40)) / 2;
+  const cardY = 200;
+
+  let overCard = false;
+  for (let i = 0; i < SHOP_ITEMS.length; i++) {
+    const cx = startX + i * (cardW + 40);
+    if (mouseX >= cx && mouseX <= cx + cardW &&
+        mouseY >= cardY && mouseY <= cardY + cardH) {
+      overCard = true;
+      break;
+    }
+  }
+
+  canvas.style.cursor = overCard ? "pointer" : "default";
+});
+
+canvas.addEventListener("mousemove", (e) => {
+  if (window.mode !== "starter") return;
+
+  const rect = canvas.getBoundingClientRect();
+  const scaleX = canvas.width / rect.width;
+  const scaleY = canvas.height / rect.height;
+  const mouseX = (e.clientX - rect.left) * scaleX;
+  const mouseY = (e.clientY - rect.top) * scaleY;
+
+  const animals = ["cat", "dog", "fish"];
+  let overCard = false;
+
+  for (const animal of animals) {
+    const pos = STARTER_POSITIONS[animal];
+    if (mouseX >= pos.x - 20 && mouseX <= pos.x + SPRITE_SIZE + 20 &&
+        mouseY >= pos.y - 20 && mouseY <= pos.y + SPRITE_SIZE + 60) {
+      overCard = true;
+      break;
+    }
+  }
+
+  canvas.style.cursor = overCard ? "pointer" : "default";
+});

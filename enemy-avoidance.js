@@ -161,14 +161,29 @@ function drawEnemyAvoidance() {
 // -- WIN / LOSE --
 function eaWin() {
     eaOver = true;
- 
-    // randomize rewards
-    const coins = Math.floor(Math.random() * 51) + 20;  // 20–70
-    const exp   = Math.floor(Math.random() * 51) + 50;  // 10–40
- 
+
+    const exp = Math.floor(Math.random() * 51) + 50;
+    const earnedFlowers = Math.floor(Math.random() * 21) + 30;
+
+    // 
+    if (typeof window.flowers !== "number" || isNaN(window.flowers)) {
+        window.flowers = 0;
+    }
+
+    window.flowers += earnedFlowers;
+    updateCurrencyUI();
+
+    console.log("FLOWERS AFTER EA WIN:", window.flowers);
+
     document.getElementById("eaEndText").innerText = "You Survived! 🎉";
-    document.getElementById("eaRewards").innerText = `coins: $${coins}   exp: ${exp}`;
+    document.getElementById("eaRewards").innerText =
+        `🌸 +${earnedFlowers}   EXP: ${exp}`;
+
     document.getElementById("eaEndPopup").classList.remove("hidden");
+
+    if (typeof addXP === "function") {
+        addXP(exp);
+    }
 }
  
 function eaLose() {
