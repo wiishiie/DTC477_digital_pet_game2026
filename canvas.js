@@ -8,6 +8,8 @@ let x = (W - SIZE) / 4;
 let y = (H - SIZE) / 4;
 let facing = "idle";
 
+
+
 const keys = {};
 
 // TRACKS WHICH MINI-GAME IS ACTIVE — added by Riley
@@ -23,7 +25,7 @@ function hideAllPopups() {
 
 // KEY CONTROLS
 document.addEventListener('keydown', (e) => {
-  if (['ArrowUp','ArrowDown','ArrowLeft','ArrowRight'].includes(e.key)) {
+  if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(e.key)) {
     e.preventDefault();
     keys[e.key] = true;
     if (activeGame === "rlgl" && window.mode === "game" && gameStarted && light === "red" && !gameOver) {
@@ -33,7 +35,7 @@ document.addEventListener('keydown', (e) => {
 });
 
 document.addEventListener('keyup', (e) => {
-  if (['ArrowUp','ArrowDown','ArrowLeft','ArrowRight'].includes(e.key)) {
+  if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(e.key)) {
     keys[e.key] = false;
   }
 });
@@ -47,7 +49,7 @@ async function loadStarterSprites() {
   const starters = ["cat", "dog", "fish"];
   for (const animal of starters) {
     const jsonPath = `sprite/${animal}/egg/egg-${animal}-idle.json`;
-    const imgPath  = `sprite/${animal}/egg/egg-${animal}-idle.png`;
+    const imgPath = `sprite/${animal}/egg/egg-${animal}-idle.png`;
 
     const res = await fetch(jsonPath);
     const data = await res.json();
@@ -66,8 +68,8 @@ async function loadStarterSprites() {
 }
 
 const STARTER_POSITIONS = {
-  cat:  { x: 100, y: 250 },
-  dog:  { x: 400, y: 250 },
+  cat: { x: 100, y: 250 },
+  dog: { x: 400, y: 250 },
   fish: { x: 700, y: 250 },
 };
 
@@ -81,9 +83,9 @@ function drawStarter() {
 
   // little star decorations
   const stars = [
-    {x: 80, y: 80}, {x: 920, y: 60}, {x: 150, y: 550},
-    {x: 850, y: 500}, {x: 500, y: 60}, {x: 70, y: 350},
-    {x: 940, y: 300}, {x: 300, y: 620}, {x: 700, y: 630}
+    { x: 80, y: 80 }, { x: 920, y: 60 }, { x: 150, y: 550 },
+    { x: 850, y: 500 }, { x: 500, y: 60 }, { x: 70, y: 350 },
+    { x: 940, y: 300 }, { x: 300, y: 620 }, { x: 700, y: 630 }
   ];
   ctx.fillStyle = "#ffb3d1";
   for (const s of stars) {
@@ -97,7 +99,7 @@ function drawStarter() {
   ctx.strokeStyle = "#c45878";
   ctx.lineWidth = 4;
   ctx.beginPath();
-  ctx.roundRect(W/2 - 260, 30, 520, 80, 20);
+  ctx.roundRect(W / 2 - 260, 30, 520, 80, 20);
   ctx.fill();
   ctx.stroke();
 
@@ -172,7 +174,7 @@ canvas.addEventListener("click", (e) => {
     for (const animal of animals) {
       const pos = STARTER_POSITIONS[animal];
       if (mouseX >= pos.x - 20 && mouseX <= pos.x + SPRITE_SIZE + 20 &&
-          mouseY >= pos.y - 20 && mouseY <= pos.y + SPRITE_SIZE + 40) {
+        mouseY >= pos.y - 20 && mouseY <= pos.y + SPRITE_SIZE + 40) {
         pickStarterPet(animal);
         return;
       }
@@ -197,13 +199,13 @@ canvas.addEventListener("click", (e) => {
       const cx = startX + i * (cardW + 40);
 
       if (mouseX >= cx && mouseX <= cx + cardW &&
-          mouseY >= cardY && mouseY <= cardY + cardH) {
+        mouseY >= cardY && mouseY <= cardY + cardH) {
 
         if (window.flowers >= item.cost) {
           window.flowers -= item.cost;
           updateCurrencyUI();
-          addHunger(item.hunger);
-          showShopFeedback(`Bought ${item.name}! +${item.hunger} hunger 🌸`);
+          giveInventoryItem(item.name, 1);
+          showShopFeedback(`Bought ${item.name}! Added to bag 🎒`);
         } else {
           showShopFeedback("Not enough flowers! 🌸");
         }
@@ -216,10 +218,10 @@ canvas.addEventListener("click", (e) => {
 // MOVEMENT
 function applyMovement() {
   let moved = false;
-  if (keys['ArrowLeft'])  { x = Math.max(0, x - SPEED); facing = "left";  moved = true; }
+  if (keys['ArrowLeft']) { x = Math.max(0, x - SPEED); facing = "left"; moved = true; }
   if (keys['ArrowRight']) { x = Math.min(W - SIZE, x + SPEED); facing = "right"; moved = true; }
-  if (keys['ArrowUp'])    { y = Math.max(0, y - SPEED); facing = "up";    moved = true; }
-  if (keys['ArrowDown'])  { y = Math.min(H - SIZE, y + SPEED); facing = "down";  moved = true; }
+  if (keys['ArrowUp']) { y = Math.max(0, y - SPEED); facing = "up"; moved = true; }
+  if (keys['ArrowDown']) { y = Math.min(H - SIZE, y + SPEED); facing = "down"; moved = true; }
   if (!moved) facing = "idle";
   return moved;
 }
@@ -253,7 +255,7 @@ gameBg.src = "sprite/visuals/game-bg.svg";
 const SHOP_ITEMS = [
   { name: "Cupcake", img: "sprite/visuals/cupcake.svg", cost: 200, hunger: 2 },
   { name: "Pancake", img: "sprite/visuals/pancake.svg", cost: 200, hunger: 2 },
-  { name: "Sushi",   img: "sprite/visuals/sushi.svg",   cost: 200, hunger: 2 },
+  { name: "Sushi", img: "sprite/visuals/sushi.svg", cost: 200, hunger: 2 },
 ];
 
 const shopImgs = {};
@@ -278,11 +280,11 @@ function showShopFeedback(msg) {
 function draw() {
   ctx.clearRect(0, 0, W, H);
 
-  if (window.mode === "starter")   drawStarter();
-  if (window.mode === "home")      drawHome();
+  if (window.mode === "starter") drawStarter();
+  if (window.mode === "home") drawHome();
   if (window.mode === "inventory") drawInventory();
-  if (window.mode === "shop")      drawShop();
-  if (window.mode === "game")      drawGame();
+  if (window.mode === "shop") drawShop();
+  if (window.mode === "game") drawGame();
 
   requestAnimationFrame(draw);
 }
@@ -307,61 +309,61 @@ function drawInventory() {
 function drawShop() {
   // background
   // pastel gradient background
-const grad = ctx.createLinearGradient(0, 0, 0, H);
-grad.addColorStop(0, "#ffd6e7");
-grad.addColorStop(1, "#fff0f6");
-ctx.fillStyle = grad;
-ctx.fillRect(0, 0, W, H);
+  const grad = ctx.createLinearGradient(0, 0, 0, H);
+  grad.addColorStop(0, "#ffd6e7");
+  grad.addColorStop(1, "#fff0f6");
+  ctx.fillStyle = grad;
+  ctx.fillRect(0, 0, W, H);
 
-// sparkle decorations
-ctx.fillStyle = "#ffb3d1";
-ctx.font = "24px Arial";
-ctx.textAlign = "center";
-const sparkles = [
-  {x: 80, y: 80}, {x: 920, y: 60}, {x: 150, y: 550},
-  {x: 850, y: 500}, {x: 500, y: 60}, {x: 70, y: 350},
-  {x: 940, y: 300}, {x: 300, y: 620}, {x: 700, y: 630}
-];
-for (const s of sparkles) {
-  ctx.fillText("✦", s.x, s.y);
-}
+  // sparkle decorations
+  ctx.fillStyle = "#ffb3d1";
+  ctx.font = "24px Arial";
+  ctx.textAlign = "center";
+  const sparkles = [
+    { x: 80, y: 80 }, { x: 920, y: 60 }, { x: 150, y: 550 },
+    { x: 850, y: 500 }, { x: 500, y: 60 }, { x: 70, y: 350 },
+    { x: 940, y: 300 }, { x: 300, y: 620 }, { x: 700, y: 630 }
+  ];
+  for (const s of sparkles) {
+    ctx.fillText("✦", s.x, s.y);
+  }
 
   // title
   // title box
-ctx.fillStyle = "#ff85b3";
-ctx.strokeStyle = "#c45878";
-ctx.lineWidth = 4;
-ctx.beginPath();
-ctx.roundRect(W/2 - 160, 30, 320, 80, 20);
-ctx.fill();
-ctx.stroke();
+  ctx.fillStyle = "#ff85b3";
+  ctx.strokeStyle = "#c45878";
+  ctx.lineWidth = 4;
+  ctx.beginPath();
+  ctx.roundRect(W / 2 - 160, 30, 320, 80, 20);
+  ctx.fill();
+  ctx.stroke();
 
-// title text
-ctx.fillStyle = "white";
-ctx.font = "bold 52px 'Jersey 10'";
-ctx.textAlign = "center";
-ctx.fillText("✦ SHOP ✦", W / 2, 88);
+  // title text
+  ctx.fillStyle = "white";
+  ctx.font = "bold 52px 'Jersey 10'";
+  ctx.textAlign = "center";
+  ctx.fillText("✦ SHOP ✦", W / 2, 88);
 
   // flower balance top right
   // flower balance badge top right
-const badgeW = 220;
-const badgeH = 64;
-const badgeX = W - badgeW - 20;
-const badgeY = 14;
+  const badgeW = 220;
+  const badgeH = 64;
+  const badgeX = W - badgeW - 20;
+  const badgeY = 14;
 
-ctx.fillStyle = "#fef08a";
-ctx.strokeStyle = "#c8860a";
-ctx.lineWidth = 3;
-ctx.beginPath();
-ctx.roundRect(badgeX, badgeY, badgeW, badgeH, 10);
-ctx.fill();
-ctx.stroke();
+  ctx.fillStyle = "#fef08a";
+  ctx.strokeStyle = "#c8860a";
+  ctx.lineWidth = 3;
+  ctx.beginPath();
+  ctx.roundRect(badgeX, badgeY, badgeW, badgeH, 10);
+  ctx.fill();
+  ctx.stroke();
 
-ctx.drawImage(flowerIconShop, badgeX + 10, badgeY + 7, 50, 50);
-ctx.fillStyle = "#3d2b1a";
-ctx.font = "44px 'Jersey 10'";
-ctx.textAlign = "left";
-ctx.fillText(window.flowers, badgeX + 68, badgeY + 44);
+  ctx.drawImage(flowerIconShop, badgeX + 10, badgeY + 7, 50, 50);
+  ctx.fillStyle = "#3d2b1a";
+  ctx.font = "44px 'Jersey 10'";
+  ctx.textAlign = "left";
+  ctx.fillText(window.flowers, badgeX + 68, badgeY + 44);
 
   const cardW = 220;
   const cardH = 300;
@@ -390,30 +392,30 @@ ctx.fillText(window.flowers, badgeX + 68, badgeY + 44);
     ctx.textAlign = "center";
     ctx.fillText(item.name, cx + cardW / 2, cardY + 205);
 
-    
-  // cost badge
-const badgeX = cx + 20;
-const badgeY = cardY + 220;
-const badgeW = cardW - 40;
-const badgeH = 48;
 
-ctx.fillStyle = "#f5dc91";
-ctx.strokeStyle = "#c8860a";
-ctx.lineWidth = 3;
-ctx.beginPath();
-ctx.roundRect(badgeX, badgeY, badgeW, badgeH, 8);
-ctx.fill();
-ctx.stroke();
+    // cost badge
+    const badgeX = cx + 20;
+    const badgeY = cardY + 220;
+    const badgeW = cardW - 40;
+    const badgeH = 48;
 
-// center the flower icon + cost together
-const totalContentW = 36 + 8 + ctx.measureText(`${item.cost}`).width;
-const contentStartX = badgeX + (badgeW - totalContentW) / 2;
+    ctx.fillStyle = "#f5dc91";
+    ctx.strokeStyle = "#c8860a";
+    ctx.lineWidth = 3;
+    ctx.beginPath();
+    ctx.roundRect(badgeX, badgeY, badgeW, badgeH, 8);
+    ctx.fill();
+    ctx.stroke();
 
-ctx.drawImage(flowerIconShop, contentStartX, badgeY + 4, 44, 44);
-ctx.fillStyle = "#3d2b1a";
-ctx.font = "28px 'Jersey 10'";
-ctx.textAlign = "left";
-ctx.fillText(`${item.cost}`, contentStartX + 44, badgeY + 32);
+    // center the flower icon + cost together
+    const totalContentW = 36 + 8 + ctx.measureText(`${item.cost}`).width;
+    const contentStartX = badgeX + (badgeW - totalContentW) / 2;
+
+    ctx.drawImage(flowerIconShop, contentStartX, badgeY + 4, 44, 44);
+    ctx.fillStyle = "#3d2b1a";
+    ctx.font = "28px 'Jersey 10'";
+    ctx.textAlign = "left";
+    ctx.fillText(`${item.cost}`, contentStartX + 44, badgeY + 32);
     // hunger reward
     ctx.fillStyle = "#c45878";
     ctx.font = "26px 'Jersey 10'";
@@ -505,7 +507,7 @@ canvas.addEventListener("mousemove", (e) => {
   for (let i = 0; i < SHOP_ITEMS.length; i++) {
     const cx = startX + i * (cardW + 40);
     if (mouseX >= cx && mouseX <= cx + cardW &&
-        mouseY >= cardY && mouseY <= cardY + cardH) {
+      mouseY >= cardY && mouseY <= cardY + cardH) {
       overCard = true;
       break;
     }
@@ -529,7 +531,7 @@ canvas.addEventListener("mousemove", (e) => {
   for (const animal of animals) {
     const pos = STARTER_POSITIONS[animal];
     if (mouseX >= pos.x - 20 && mouseX <= pos.x + SPRITE_SIZE + 20 &&
-        mouseY >= pos.y - 20 && mouseY <= pos.y + SPRITE_SIZE + 60) {
+      mouseY >= pos.y - 20 && mouseY <= pos.y + SPRITE_SIZE + 60) {
       overCard = true;
       break;
     }
