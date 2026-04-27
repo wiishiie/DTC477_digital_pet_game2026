@@ -1,5 +1,5 @@
 { "frames": {
-   "l1-cat-right 0.aseprite": {
+   "l1-dog-right 0.aseprite": {
     "frame": { "x": 0, "y": 0, "w": 64, "h": 64 },
     "rotated": false,
     "trimmed": false,
@@ -7,7 +7,7 @@
     "sourceSize": { "w": 64, "h": 64 },
     "duration": 300
    },
-   "l1-cat-right 1.aseprite": {
+   "l1-dog-right 1.aseprite": {
     "frame": { "x": 64, "y": 0, "w": 64, "h": 64 },
     "rotated": false,
     "trimmed": false,
@@ -19,14 +19,14 @@
  "meta": {
   "app": "https://www.aseprite.org/",
   "version": "1.3.17-x64",
-  "image": "l1-cat-right.png",
+  "image": "l1-dog-right.png",
   "format": "RGBA8888",
   "size": { "w": 128, "h": 64 },
   "scale": "1",
   "frameTags": [
   ],
   "layers": [
-   { "name": "Layer 3", "opacity": 255, "blendMode": "normal" }
+   { "name": "Layer 1", "opacity": 255, "blendMode": "normal" }
   ],
   "slices": [
   ]
