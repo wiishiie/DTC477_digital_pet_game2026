@@ -103,8 +103,8 @@ function drawStarter() {
 
   ctx.fillStyle = "#c45878";
   ctx.font = "30px 'Jersey 10'";
-  ctx.fillText("pick your companion to start your journey", W / 2, 145);
-
+  ctx.fillText("pick your companion to start your journey.", W / 2, 145);
+ctx.fillText("Play games to earn experience and flowers to buy food and level up your pet!", W/ 2, 185)
   const petNames = { cat: "Cat", dog: "Dog", fish: "Fish" };
 
   for (const [animal, sprite] of Object.entries(starterSprites)) {

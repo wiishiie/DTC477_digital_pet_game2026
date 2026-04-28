@@ -25,15 +25,20 @@ canvas {
 /* TITLE */
 h1 {
   z-index: 100;
-  font-size: 50px;
+  font-size: 5vw;
+  color: white;
   padding: 2vw;
-  padding-top: 3vw;
-  width: 400px;
+  /* padding-top: 3vw; */
+  width: 30vw;
   height: 40px;
   display: flex;
   align-items: center;
   justify-content: center;
   margin: auto;
+  margin-top: 0.5vw;
+  background-color:#f87ba0;
+  border-radius: 5vw;
+  
 }
  
 /* CANVAS */
