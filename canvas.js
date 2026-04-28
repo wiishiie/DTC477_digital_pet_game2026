@@ -2,58 +2,14 @@ const canvas = document.getElementById('screen');
 const ctx = canvas.getContext('2d');
 const FRAME_SPEED = 80;
 const SPRITE_SIZE = 180;
-const SIZE = 50, SPEED = 1;
 
-let W = 1000, H = 700;
-
-function resizeCanvas() {
-  let newW = Math.floor(window.innerWidth * 0.50);
-  let newH = Math.floor(window.innerHeight * 0.70);
-  canvas.width  = newW;
-  canvas.height = newH;
-  canvas.style.width  = newW + "px";
-  canvas.style.height = newH + "px";
-  W = newW;
-  H = newH;
-  const petSize = currentPet ? currentPet.size : SIZE;
-  if (typeof x !== "undefined") x = Math.min(x, W - petSize);
-  if (typeof y !== "undefined") y = Math.min(y, H - petSize);
-}
-
-window.addEventListener("resize", resizeCanvas);
-resizeCanvas();
-
-let x = W / 4;
-let y = H / 4;
+const W = 1000, H = 700, SIZE = 50, SPEED = 1.5;
+let x = (W - SIZE) / 4;
+let y = (H - SIZE) / 4;
 let facing = "idle";
 
 const keys = {};
 let activeGame = null;
-
-
-function resizeCanvas() {
-  const vw = window.innerWidth;
-  const vh = window.innerHeight;
-
-  // match your desired proportions (1000x700 ratio)
-  let newW = Math.floor(vw * 0.50);
-  let newH = Math.floor(vh * 0.70);
-
-  canvas.width  = newW;
-  canvas.height = newH;
-  canvas.style.width  = newW + "px";
-  canvas.style.height = newH + "px";
-
-  // update the global W and H so all game logic uses the new size
-  W = newW;
-  H = newH;
-}
-
-window.addEventListener("resize", () => {
-  resizeCanvas();
-});
-
-resizeCanvas();
 
 // HIDES ALL POPUPS — added by Riley
 function hideAllPopups() {
@@ -114,14 +70,12 @@ const STARTER_POSITIONS = {
 };
 
 function drawStarter() {
-  // pastel gradient background
   const grad = ctx.createLinearGradient(0, 0, 0, H);
   grad.addColorStop(0, "#ffd6e7");
   grad.addColorStop(1, "#fff0f6");
   ctx.fillStyle = grad;
   ctx.fillRect(0, 0, W, H);
 
-  // little star decorations
   const stars = [
     { x: 80, y: 80 }, { x: 920, y: 60 }, { x: 150, y: 550 },
     { x: 850, y: 500 }, { x: 500, y: 60 }, { x: 70, y: 350 },
@@ -134,7 +88,6 @@ function drawStarter() {
     ctx.fillText("✦", s.x, s.y);
   }
 
-  // title box
   ctx.fillStyle = "#ff85b3";
   ctx.strokeStyle = "#c45878";
   ctx.lineWidth = 4;
@@ -143,13 +96,11 @@ function drawStarter() {
   ctx.fill();
   ctx.stroke();
 
-  // title text
   ctx.fillStyle = "white";
   ctx.font = "bold 52px 'Jersey 10'";
   ctx.textAlign = "center";
   ctx.fillText("✦ Choose Your Pet! ✦", W / 2, 88);
 
-  // subtitle
   ctx.fillStyle = "#c45878";
   ctx.font = "30px 'Jersey 10'";
   ctx.fillText("pick your companion to start your journey", W / 2, 145);
@@ -166,13 +117,11 @@ function drawStarter() {
     const frame = sprite.frames[sprite.current].frame;
     const pos = STARTER_POSITIONS[animal];
 
-    // card shadow
     ctx.fillStyle = "rgba(196, 88, 120, 0.15)";
     ctx.beginPath();
     ctx.roundRect(pos.x - 20 + 6, pos.y - 20 + 6, SPRITE_SIZE + 40, SPRITE_SIZE + 80, 16);
     ctx.fill();
 
-    // card background
     ctx.fillStyle = "#fff0f6";
     ctx.strokeStyle = "#f0a8bc";
     ctx.lineWidth = 4;
@@ -181,10 +130,8 @@ function drawStarter() {
     ctx.fill();
     ctx.stroke();
 
-    // pet sprite
     ctx.drawImage(sprite.img, frame.x, frame.y, frame.w, frame.h, pos.x, pos.y, SPRITE_SIZE, SPRITE_SIZE);
 
-    // pet name badge
     ctx.fillStyle = "#ff85b3";
     ctx.strokeStyle = "#c45878";
     ctx.lineWidth = 3;
@@ -348,15 +295,12 @@ function drawInventory() {
 }
 
 function drawShop() {
-  // background
-  // pastel gradient background
   const grad = ctx.createLinearGradient(0, 0, 0, H);
   grad.addColorStop(0, "#ffd6e7");
   grad.addColorStop(1, "#fff0f6");
   ctx.fillStyle = grad;
   ctx.fillRect(0, 0, W, H);
 
-  // sparkle decorations
   ctx.fillStyle = "#ffb3d1";
   ctx.font = "24px Arial";
   ctx.textAlign = "center";
@@ -369,8 +313,6 @@ function drawShop() {
     ctx.fillText("✦", s.x, s.y);
   }
 
-  // title
-  // title box
   ctx.fillStyle = "#ff85b3";
   ctx.strokeStyle = "#c45878";
   ctx.lineWidth = 4;
@@ -379,14 +321,11 @@ function drawShop() {
   ctx.fill();
   ctx.stroke();
 
-  // title text
   ctx.fillStyle = "white";
   ctx.font = "bold 52px 'Jersey 10'";
   ctx.textAlign = "center";
   ctx.fillText("✦ SHOP ✦", W / 2, 88);
 
-  // flower balance top right
-  // flower balance badge top right
   const badgeW = 220;
   const badgeH = 64;
   const badgeX = W - badgeW - 20;
@@ -415,7 +354,6 @@ function drawShop() {
     const item = SHOP_ITEMS[i];
     const cx = startX + i * (cardW + 40);
 
-    // card background
     ctx.fillStyle = "#fff8f0";
     ctx.strokeStyle = "#c45878";
     ctx.lineWidth = 4;
@@ -424,17 +362,13 @@ function drawShop() {
     ctx.fill();
     ctx.stroke();
 
-    // food sprite
     ctx.drawImage(shopImgs[item.name], cx + 30, cardY + 20, 160, 160);
 
-    // item name
     ctx.fillStyle = "#3d2b1a";
     ctx.font = "bold 26px 'Jersey 10'";
     ctx.textAlign = "center";
     ctx.fillText(item.name, cx + cardW / 2, cardY + 205);
 
-
-    // cost badge
     const badgeX = cx + 20;
     const badgeY = cardY + 220;
     const badgeW = cardW - 40;
@@ -448,7 +382,6 @@ function drawShop() {
     ctx.fill();
     ctx.stroke();
 
-    // center the flower icon + cost together
     const totalContentW = 36 + 8 + ctx.measureText(`${item.cost}`).width;
     const contentStartX = badgeX + (badgeW - totalContentW) / 2;
 
@@ -457,14 +390,13 @@ function drawShop() {
     ctx.font = "28px 'Jersey 10'";
     ctx.textAlign = "left";
     ctx.fillText(`${item.cost}`, contentStartX + 44, badgeY + 32);
-    // hunger reward
+
     ctx.fillStyle = "#c45878";
     ctx.font = "26px 'Jersey 10'";
     ctx.textAlign = "center";
     ctx.fillText(`+${item.hunger} hunger`, cx + cardW / 2, cardY + 290);
   }
 
-  // feedback toast
   if (shopFeedbackTimer > 0) {
     ctx.globalAlpha = Math.min(1, shopFeedbackTimer / 30);
     ctx.fillStyle = "#3d2b1a";
@@ -484,10 +416,8 @@ function drawGame() {
   if (activeGame === "rlgl") {
     let moved = false;
     if (!gameOver) moved = applyMovement();
-
     drawPlayer(moved);
     drawGameUI();
-
     if (gameStarted) checkWin();
   }
 
@@ -513,7 +443,6 @@ document.getElementById("gameBtn").onclick = () => {
   }
 };
 
-// EA BUTTONS — added by Riley
 document.getElementById("eaStartBtn").onclick = () => {
   document.getElementById("eaStartPopup").classList.add("hidden");
   startEnemyAvoidance();

@@ -16,9 +16,10 @@ body {
 }
 
 canvas {
-  display: block;
-  margin: 20px auto;
+  width: 50vw;
+  height: 70vh;
   image-rendering: pixelated;
+  margin: 0 auto;
 }
  
 /* TITLE */
