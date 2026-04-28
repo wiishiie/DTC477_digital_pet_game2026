@@ -2,18 +2,58 @@ const canvas = document.getElementById('screen');
 const ctx = canvas.getContext('2d');
 const FRAME_SPEED = 80;
 const SPRITE_SIZE = 180;
+const SIZE = 50, SPEED = 1;
 
-const W = 1000, H = 700, SIZE = 50, SPEED = 1.5;
-let x = (W - SIZE) / 4;
-let y = (H - SIZE) / 4;
+let W = 1000, H = 700;
+
+function resizeCanvas() {
+  let newW = Math.floor(window.innerWidth * 0.50);
+  let newH = Math.floor(window.innerHeight * 0.70);
+  canvas.width  = newW;
+  canvas.height = newH;
+  canvas.style.width  = newW + "px";
+  canvas.style.height = newH + "px";
+  W = newW;
+  H = newH;
+  const petSize = currentPet ? currentPet.size : SIZE;
+  if (typeof x !== "undefined") x = Math.min(x, W - petSize);
+  if (typeof y !== "undefined") y = Math.min(y, H - petSize);
+}
+
+window.addEventListener("resize", resizeCanvas);
+resizeCanvas();
+
+let x = W / 4;
+let y = H / 4;
 let facing = "idle";
 
-
-
 const keys = {};
-
-// TRACKS WHICH MINI-GAME IS ACTIVE — added by Riley
 let activeGame = null;
+
+
+function resizeCanvas() {
+  const vw = window.innerWidth;
+  const vh = window.innerHeight;
+
+  // match your desired proportions (1000x700 ratio)
+  let newW = Math.floor(vw * 0.50);
+  let newH = Math.floor(vh * 0.70);
+
+  canvas.width  = newW;
+  canvas.height = newH;
+  canvas.style.width  = newW + "px";
+  canvas.style.height = newH + "px";
+
+  // update the global W and H so all game logic uses the new size
+  W = newW;
+  H = newH;
+}
+
+window.addEventListener("resize", () => {
+  resizeCanvas();
+});
+
+resizeCanvas();
 
 // HIDES ALL POPUPS — added by Riley
 function hideAllPopups() {
@@ -217,11 +257,12 @@ canvas.addEventListener("click", (e) => {
 
 // MOVEMENT
 function applyMovement() {
+  const petSize = currentPet ? currentPet.size : SIZE;
   let moved = false;
-  if (keys['ArrowLeft']) { x = Math.max(0, x - SPEED); facing = "left"; moved = true; }
-  if (keys['ArrowRight']) { x = Math.min(W - SIZE, x + SPEED); facing = "right"; moved = true; }
-  if (keys['ArrowUp']) { y = Math.max(0, y - SPEED); facing = "up"; moved = true; }
-  if (keys['ArrowDown']) { y = Math.min(H - SIZE, y + SPEED); facing = "down"; moved = true; }
+  if (keys['ArrowLeft'])  { x = Math.max(0, x - SPEED); facing = "left";  moved = true; }
+  if (keys['ArrowRight']) { x = Math.min(W - petSize, x + SPEED); facing = "right"; moved = true; }
+  if (keys['ArrowUp'])    { y = Math.max(0, y - SPEED); facing = "up";    moved = true; }
+  if (keys['ArrowDown'])  { y = Math.min(H - petSize, y + SPEED); facing = "down";  moved = true; }
   if (!moved) facing = "idle";
   return moved;
 }
@@ -253,9 +294,9 @@ gameBg.src = "sprite/visuals/game-bg.svg";
 
 // --- SHOP ---
 const SHOP_ITEMS = [
-  { name: "Cupcake", img: "sprite/visuals/cupcake.svg", cost: 200, hunger: 2 },
-  { name: "Pancake", img: "sprite/visuals/pancake.svg", cost: 200, hunger: 2 },
-  { name: "Sushi", img: "sprite/visuals/sushi.svg", cost: 200, hunger: 2 },
+  { name: "Cupcake", img: "sprite/visuals/cupcake.svg", cost: 40, hunger: 2 },
+  { name: "Pancake", img: "sprite/visuals/pancake.svg", cost: 100, hunger: 4 },
+  { name: "Sushi", img: "sprite/visuals/sushi.svg", cost: 200, hunger: 6 },
 ];
 
 const shopImgs = {};

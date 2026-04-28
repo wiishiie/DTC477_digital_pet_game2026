@@ -12,7 +12,6 @@ greenLight.src = "sprite/visuals/green-light.svg";
 const redLight = new Image();
 redLight.src = "sprite/visuals/red-light.svg";
 
-// START BUTTON
 document.getElementById("startBtn").onclick = () => {
   document.getElementById("startPopup").classList.add("hidden");
 
@@ -21,7 +20,6 @@ document.getElementById("startBtn").onclick = () => {
 
   const interval = setInterval(() => {
     rlglCountdown--;
-
     if (rlglCountdown <= 0) {
       clearInterval(interval);
       rlglCountdownActive = false;
@@ -36,11 +34,9 @@ function startGame() {
   startTimer();
 }
 
-// LIGHT SWITCH
 function startLightCycle() {
   function switchLight() {
     if (gameOver) return;
-
     if (light === "green") {
       light = "red";
       setTimeout(switchLight, Math.random() * 1000 + 2000);
@@ -49,20 +45,13 @@ function startLightCycle() {
       setTimeout(switchLight, Math.random() * 3000 + 2000);
     }
   }
-
   switchLight();
 }
 
-// TIMER
 function startTimer() {
   const timerInterval = setInterval(() => {
-    if (gameOver) {
-      clearInterval(timerInterval);
-      return;
-    }
-
+    if (gameOver) { clearInterval(timerInterval); return; }
     gameTimer--;
-
     if (gameTimer <= 0) {
       loseGame("Time ran out!");
       clearInterval(timerInterval);
@@ -70,13 +59,10 @@ function startTimer() {
   }, 1000);
 }
 
-// UI
 function drawGameUI() {
-  // goal line
   ctx.fillStyle = "pink";
   ctx.fillRect(0, goalLine + currentPet.size - 50, W, 5);
 
-  // countdown screen overlay
   if (rlglCountdownActive) {
     ctx.fillStyle = "rgba(0,0,0,0.45)";
     ctx.fillRect(10, 10, 220, 60);
@@ -90,14 +76,12 @@ function drawGameUI() {
     return;
   }
 
-  // light image
   const img = light === "green" ? greenLight : redLight;
   const width = 80;
   const ratio = img.height / img.width || 1;
   const height = width * ratio;
   ctx.drawImage(img, 20, 20, width, height);
 
-  // timer HUD
   ctx.fillStyle = "rgba(0,0,0,0.45)";
   ctx.fillRect(10, 10, 220, 60);
   ctx.fillStyle = "white";
@@ -109,12 +93,12 @@ function drawGameUI() {
   ctx.textAlign = "left";
 }
 
-// WIN
 function checkWin() {
   if (y <= goalLine && !gameOver) {
     winGame();
   }
 }
+
 function winGame() {
   if (gameOver) return;
   gameOver = true;
@@ -133,22 +117,18 @@ function winGame() {
   document.getElementById("endText").innerHTML =
     `You Win!<br>+${earnedExp} EXP<br>🌸 +${earnedFlowers} Flowers`;
 
-  if (typeof addXP === "function") {
-    addXP(earnedExp);
-  }
+  if (typeof addXP === "function") addXP(earnedExp);
+  if (typeof handlePetXP === "function") handlePetXP(earnedExp);
 }
 
 function loseGame(message) {
   gameOver = true;
-
   document.getElementById("endPopup").classList.remove("hidden");
   document.getElementById("endText").innerText = message;
 }
 
-// RESET
 function goHome() {
   window.mode = "home";
-
   document.getElementById("startPopup").classList.add("hidden");
   document.getElementById("endPopup").classList.add("hidden");
 

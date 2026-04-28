@@ -78,8 +78,10 @@ document.getElementById("hungerRestartBtn").onclick = () => {
   totalXp    = 0;
   displayXp  = 0;
   totalCoins = 0;
-  const currencyEl = document.getElementById("currency");
-  if (currencyEl) currencyEl.textContent = 0;
+
+  // reset flowers and refresh UI
+  window.flowers = 0;
+  if (typeof updateCurrencyUI === "function") updateCurrencyUI();
  
   // hide the game over popup
   document.getElementById("hungerGameOver").classList.add("hidden");
@@ -110,13 +112,9 @@ function getXpInLevel(xp) { return xp % XP_PER_LEVEL; }
  
 animateBar();
  
-/* ── Award XP + coins (called from mini-game win) ── */
-function addXP(xpAmount, coinAmount) {
-  totalXp    += xpAmount;
-  totalCoins += coinAmount;
- 
-  const currencyEl = document.getElementById("currency");
-  if (currencyEl) currencyEl.textContent = totalCoins;
+/* ── Award XP (called from mini-game win) ── */
+function addXP(xpAmount) {
+  totalXp += xpAmount;
  
   fillEl.classList.remove("bump");
   void fillEl.offsetWidth;

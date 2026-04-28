@@ -13,8 +13,8 @@
 // ── Master item catalogue (same items as shop) ──────────────────────────────
 const INVENTORY_ITEMS = [
   { name: "Cupcake", img: "sprite/visuals/cupcake.svg",   hunger: 2 },
-  { name: "Pancake", img: "sprite/visuals/pancake.svg",   hunger: 2 },
-  { name: "Sushi",   img: "sprite/visuals/sushi.svg",     hunger: 2 },
+  { name: "Pancake", img: "sprite/visuals/pancake.svg",   hunger: 4 },
+  { name: "Sushi",   img: "sprite/visuals/sushi.svg",     hunger: 6 },
 ];
 
 // ── Player's owned quantities ────────────────────────────────────────────────

@@ -16,8 +16,8 @@ body {
 }
 
 canvas {
-  width: 50vw;
-  height: 70vh;
+  display: block;
+  margin: 20px auto;
   image-rendering: pixelated;
 }
  
