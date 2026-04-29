@@ -454,6 +454,10 @@ document.getElementById("eaHomeBtn").onclick = () => {
   window.mode = "home";
 };
 
+function toggleAboutPopup() {
+  document.getElementById("aboutPopup").classList.toggle("hidden");
+}
+
 loadStarterSprites().then(() => draw());
 
 canvas.addEventListener("mousemove", (e) => {
